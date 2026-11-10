@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-booting">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -80,6 +80,11 @@
       visibility: visible;
       pointer-events: all;
     }
+    .is-booting .swirl-transition-overlay {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
     .swirl-svg-container {
       width: 100vw;
       height: 100vh;
@@ -105,6 +110,10 @@
     #page-content-wrapper {
       opacity: 1;
       visibility: visible;
+    }
+    .is-booting #page-content-wrapper {
+      opacity: 0;
+      visibility: hidden;
     }
     #aboutPage[hidden] { display: none; }
     .route-about #top, .route-about footer { display: none; }
@@ -993,7 +1002,11 @@
   var length = path ? path.getTotalLength() : 0;
   var activeFrame = 0;
   window.playErgonTransition = function (swap) {
-    if (!overlay || !path || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { swap(); return; }
+    if (!overlay || !path || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      swap();
+      document.documentElement.classList.remove('is-booting');
+      return;
+    }
     cancelAnimationFrame(activeFrame);
     overlay.classList.add('swirl-active');
     path.style.strokeDasharray = length + ' ' + length;
@@ -1015,7 +1028,11 @@
         if (p2 > .28 && !swapped) { swapped = true; swap(); }
       }
       if (progress < 1) activeFrame = requestAnimationFrame(frame);
-      else { overlay.classList.remove('swirl-active'); path.style.strokeWidth = '45px'; }
+      else {
+        overlay.classList.remove('swirl-active');
+        path.style.strokeWidth = '45px';
+        document.documentElement.classList.remove('is-booting');
+      }
     }
     activeFrame = requestAnimationFrame(frame);
   };
@@ -1103,6 +1120,7 @@
   var initialRoute = location.hash === '#about' ? 'about' : 'home';
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     setRoute(initialRoute);
+    document.documentElement.classList.remove('is-booting');
   } else {
     window.playErgonTransition(function () { setRoute(initialRoute); });
   }
