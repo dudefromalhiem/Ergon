@@ -1100,7 +1100,12 @@
     navigate(route, true, route === 'home' && link.getAttribute('href') !== '#top' ? link.getAttribute('href') : null);
   });
   window.addEventListener('popstate', function () { navigate(location.hash === '#about' ? 'about' : 'home', false); });
-  setRoute(location.hash === '#about' ? 'about' : 'home');
+  var initialRoute = location.hash === '#about' ? 'about' : 'home';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setRoute(initialRoute);
+  } else {
+    window.playErgonTransition(function () { setRoute(initialRoute); });
+  }
 
   /* ---------- Marquee ---------- */
   var words = ['Social media growth', 'Dedicated personal managers', 'Business networking', 'Custom websites', 'Website maintenance', 'B2B strategy', 'Content planning', 'Warm introductions'];
