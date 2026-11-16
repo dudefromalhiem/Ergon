@@ -691,6 +691,10 @@
     .f-base { margin-top: clamp(40px, 6vw, 80px); padding-top: 22px; border-top: 1px solid rgba(253,251,250,.16); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 0.82rem; color: rgba(253,251,250,.55); }
     .f-base a { color: rgba(253, 251, 250, 0.7); text-decoration: none; transition: color .2s; }
     .f-base a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+    .privacy-policy { padding-block: clamp(56px, 8vw, 100px); background: var(--ivory); }
+    .privacy-policy .privacy-copy { max-width: 760px; display: grid; gap: 18px; }
+    .privacy-policy h2 { margin: 0; }
+    .privacy-policy p { margin: 0; color: var(--ink-soft); }
 
     /* ---------- Cursor & Paper Texture ---------- */
     @media (pointer: fine) { html.has-custom-cursor, html.has-custom-cursor * { cursor: none !important; } }
@@ -812,7 +816,7 @@
   <div class="site-head">
     <div class="wrap nav-shell">
       <nav class="nav apple-liquid-glass shape-a" aria-label="Primary">
-        <a class="brand" href="#top" aria-label="Ergon, home">Ergon<i>.</i></a>
+        <a class="brand" href="#top" aria-label="Ergon, home">Ergon</a>
         <ul class="nav-links apple-liquid-glass shape-d" id="navLinks">
           <li><a href="#services">Services</a></li>
           <li><a href="#work">Work</a></li>
@@ -1034,7 +1038,7 @@
             <div class="success" id="success" hidden>
               <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
               <h3>Thanks, <span id="okName">there</span>.</h3>
-              <p style="color:var(--ink-soft)">Your message has been received. A member of our team will reply to <b id="okEmail" style="color:var(--ink)"></b> within one working day.</p>
+              <p style="color:var(--ink-soft)">Your email draft is ready to send to <b id="okEmail" style="color:var(--ink)"></b>. Please press send in your email app and a member of our team will reply within one working day.</p>
               <button class="btn btn-ghost btn-sm" type="button" id="again">Send another message</button>
             </div>
           </div>
@@ -1043,12 +1047,23 @@
     </section>
   </main>
 
+  <section class="privacy-policy" id="privacy">
+    <div class="wrap">
+      <div class="privacy-copy">
+        <p class="eyebrow">Privacy policy</p>
+        <h2>Your information stays private.</h2>
+        <p>Ergon does not collect, store, sell, or share personal information through this website. The contact form does not save your details on the site; clicking “Send message” opens your email app with your message addressed to <a href="mailto:vaibhav.vijendra1201@gmail.com">vaibhav.vijendra1201@gmail.com</a>.</p>
+        <p>Any information you choose to send is handled through your email provider and used only to respond to your enquiry. Please review your email provider’s privacy policy for how it handles your message.</p>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="wrap">
       <div class="f-grid">
         <div><p class="f-big">Growth you can trace to real work.</p></div>
         <div><h4>Services</h4><ul><li><a href="#services">Social media growth</a></li><li><a href="#services">Personal managers</a></li><li><a href="#services">Business networking</a></li><li><a href="#services">Websites</a></li></ul></div>
-        <div><h4>Company</h4><ul><li><a href="#work">Work</a></li><li><a href="#clients">Clients</a></li><li><a href="#contact">Contact</a></li></ul></div>
+        <div><h4>Company</h4><ul><li><a href="#work">Work</a></li><li><a href="#clients">Clients</a></li><li><a href="#contact">Contact</a></li><li><a href="#privacy">Privacy policy</a></li></ul></div>
       </div>
       <div class="f-base"><span>&copy; 2026 Ergon. All rights reserved.</span><a href="#top">Back to top</a><span>Built for B2B teams</span></div>
     </div>
@@ -1472,7 +1487,16 @@
   selBtn.addEventListener('click', function () { setTimeout(listSc.update, 30); });
 
   function submitInquiry(payload) {
-    return new Promise(function (resolve) { setTimeout(function () { resolve({ ok: true, payload: payload }); }, 1100); });
+    var subject = encodeURIComponent('New Ergon enquiry from ' + payload.name.trim());
+    var body = encodeURIComponent(
+      'Name: ' + payload.name.trim() + '\n' +
+      'Company: ' + payload.company.trim() + '\n' +
+      'Email: ' + payload.email.trim() + '\n' +
+      'Interested in: ' + payload.service + '\n\n' +
+      payload.message.trim()
+    );
+    window.location.href = 'mailto:vaibhav.vijendra1201@gmail.com?subject=' + subject + '&body=' + body;
+    return Promise.resolve({ ok: true, payload: payload });
   }
 
   form.addEventListener('submit', function (e) {
