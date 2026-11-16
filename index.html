@@ -691,11 +691,6 @@
     .f-base { margin-top: clamp(40px, 6vw, 80px); padding-top: 22px; border-top: 1px solid rgba(253,251,250,.16); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 0.82rem; color: rgba(253,251,250,.55); }
     .f-base a { color: rgba(253, 251, 250, 0.7); text-decoration: none; transition: color .2s; }
     .f-base a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
-    .privacy-policy { padding-block: clamp(56px, 8vw, 100px); background: var(--ivory); }
-    .privacy-policy .privacy-copy { max-width: 760px; display: grid; gap: 18px; }
-    .privacy-policy h2 { margin: 0; }
-    .privacy-policy p { margin: 0; color: var(--ink-soft); }
-
     /* ---------- Cursor & Paper Texture ---------- */
     @media (pointer: fine) { html.has-custom-cursor, html.has-custom-cursor * { cursor: none !important; } }
     @media (pointer: coarse) { #liquid-cursor-canvas { display: none !important; } }
@@ -847,6 +842,28 @@
         <div>
           <p class="service-modal-list-label">What this includes</p>
           <ul class="service-modal-list" id="serviceModalList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="service-modal" id="privacyModal" hidden aria-hidden="true">
+    <div class="service-modal-shell" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle">
+      <div class="service-modal-panel">
+        <button class="service-modal-close" id="privacyModalClose" type="button" aria-label="Close privacy policy">×</button>
+        <div class="service-modal-copy">
+          <p class="eyebrow">Privacy policy</p>
+          <div class="service-modal-number" aria-hidden="true">00</div>
+          <h2 id="privacyModalTitle">Your information stays private.</h2>
+          <p>Ergon does not collect, store, sell, or share personal information through this website. The contact form does not save your details on the site.</p>
+        </div>
+        <div>
+          <p class="service-modal-list-label">Our approach</p>
+          <ul class="service-modal-list">
+            <li>Clicking “Send message” opens your email app addressed to <a href="mailto:vaibhav.vijendra1201@gmail.com">vaibhav.vijendra1201@gmail.com</a>.</li>
+            <li>Any information you send is handled through your email provider and used only to respond to your enquiry.</li>
+            <li>Please review your email provider’s privacy policy for how it handles your message.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -1047,23 +1064,12 @@
     </section>
   </main>
 
-  <section class="privacy-policy" id="privacy">
-    <div class="wrap">
-      <div class="privacy-copy">
-        <p class="eyebrow">Privacy policy</p>
-        <h2>Your information stays private.</h2>
-        <p>Ergon does not collect, store, sell, or share personal information through this website. The contact form does not save your details on the site; clicking “Send message” opens your email app with your message addressed to <a href="mailto:vaibhav.vijendra1201@gmail.com">vaibhav.vijendra1201@gmail.com</a>.</p>
-        <p>Any information you choose to send is handled through your email provider and used only to respond to your enquiry. Please review your email provider’s privacy policy for how it handles your message.</p>
-      </div>
-    </div>
-  </section>
-
   <footer>
     <div class="wrap">
       <div class="f-grid">
         <div><p class="f-big">Growth you can trace to real work.</p></div>
         <div><h4>Services</h4><ul><li><a href="#services">Social media growth</a></li><li><a href="#services">Personal managers</a></li><li><a href="#services">Business networking</a></li><li><a href="#services">Websites</a></li></ul></div>
-        <div><h4>Company</h4><ul><li><a href="#work">Work</a></li><li><a href="#clients">Clients</a></li><li><a href="#contact">Contact</a></li><li><a href="#privacy">Privacy policy</a></li></ul></div>
+        <div><h4>Company</h4><ul><li><a href="#work">Work</a></li><li><a href="#clients">Clients</a></li><li><a href="#contact">Contact</a></li><li><a href="#privacy" data-privacy>Privacy policy</a></li></ul></div>
       </div>
       <div class="f-base"><span>&copy; 2026 Ergon. All rights reserved.</span><a href="#top">Back to top</a><span>Built for B2B teams</span></div>
     </div>
@@ -1289,6 +1295,33 @@
   serviceModalClose.addEventListener('click', closeServiceModal);
   serviceModal.addEventListener('click', function (e) { if (e.target === serviceModal) closeServiceModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !serviceModal.hidden) closeServiceModal(); });
+
+  /* ---------- Privacy Policy Modal ---------- */
+  var privacyModal = document.getElementById('privacyModal');
+  var privacyModalClose = document.getElementById('privacyModalClose');
+  var lastPrivacyTrigger = null;
+  function closePrivacyModal() {
+    privacyModal.hidden = true;
+    privacyModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastPrivacyTrigger) lastPrivacyTrigger.focus();
+  }
+  function openPrivacyModal(trigger) {
+    lastPrivacyTrigger = trigger;
+    privacyModal.hidden = false;
+    privacyModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    privacyModalClose.focus();
+  }
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('[data-privacy]');
+    if (!trigger) return;
+    e.preventDefault();
+    openPrivacyModal(trigger);
+  });
+  privacyModalClose.addEventListener('click', closePrivacyModal);
+  privacyModal.addEventListener('click', function (e) { if (e.target === privacyModal) closePrivacyModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !privacyModal.hidden) closePrivacyModal(); });
 
   /* ---------- Portfolio ---------- */
   var cases = [
